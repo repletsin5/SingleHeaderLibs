@@ -27,9 +27,9 @@ struct commandStruct
 public:
 	 CIH();
 	 ~CIH();
-	 inline static void initcihandler(string & output);
-	 inline static void* initcihandler(void* output);
-	 inline static int initcihandlerOnNewThread(string & output );
+	 inline static void initciHandler(string & output);
+	 inline static void* initciHandler(void* output);
+	 inline static int initciHandlerOnNewThread(string & output );
 	 std::vector<commandStruct> commands;
 	 static void addCommand(string cmd, vector<string> aliases, string description, void (*callback)(vector<string>));
 private:
@@ -47,18 +47,18 @@ CIH::~CIH()
 {
 }
 
-int CIH::initcihandlerOnNewThread(string& output) {
+int CIH::initciHandlerOnNewThread(string& output) {
 
 	pthread_t thread;
 	int ret;
-	ret = pthread_create(&thread, NULL, initcihandler, (void*)&output);
+	ret = pthread_create(&thread, NULL, initciHandler, (void*)&output);
 	if (ret != 0) {
 		printf("pthread_create() failed\n");
 		exit(0);
 	}
 	return ret;
 }
-void* CIH::initcihandler(void* output) {
+void* CIH::initciHandler(void* output) {
 
 	CIH::addCommand("help", { "" }, "", helpCommand);
 	string outputString = *(static_cast<string*>(output));
@@ -121,7 +121,7 @@ void* CIH::initcihandler(void* output) {
 	}
 }
 
-void CIH::initcihandler(string & output) {
+void CIH::initciHandler(string & output) {
 
 	CIH::addCommand("help", { "" }, "", helpCommand);
 	cout << output;
@@ -260,8 +260,6 @@ void CIH::addCommand(string cmd,vector<string> aliases, string description, void
 }
 
 void CIH::helpCommand(vector<string> args) {
-
-
 	for (auto c : cih.commands) {
 		string temp = "";
 

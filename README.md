@@ -18,7 +18,7 @@ string output = ">>";
 //you can modify the output string while running but currently only works with initCmdHandlerOnNewThread
 
 //                         	std::string&
-CIH::initCmdHandlerOnNewThread(output);
+CIH::initcihandlerOnNewThread(output);
 
 //or 
 
