@@ -198,29 +198,21 @@ void CIH::handleCommands(string command,vector<string>args) {
 
 void CIH::addCommand(string cmd,vector<string> aliases, string description, void (*callback)(vector<string>)) {
 	if (!(cih.commands.empty())) {
-		for (auto c : cih.commands) {
+		for (auto& c : cih.commands) {
 			string temp = "";
 			if (c.commandName == "help") {
 				cout << "Cannnot overrite help command" << endl;
 				assert(!(c.commandName == "help"));
 			}
 			else if (c.commandName == cmd) {
-				cout << "replacing command" << endl;
-
 				commandStruct command;
 				command.commandName = cmd;
 				command.aliases = aliases;
 				command.description = description;
 				command.callback = callback;
-				for (int i = 0; i < cih.commands.size(); i++) {
-
-					if (cih.commands[i].commandName == c.commandName) {
-						cih.commands[i].description = description;
-						cih.commands[i].aliases = aliases;
-						cih.commands[i].callback = callback;
-					}
-
-				}
+				c.aliases = aliases;
+				c.callback = callback;
+				c.description = description;
 				break;
 			}
 			else {
