@@ -15,7 +15,7 @@ int main(){
 CIH::addCommand("test",       {"testAliases","anotherOne"}      ,   "desciption for help"},   testCommand)
 
 string output = ">>";
-//you can modify the output string while running but currently only works with initCmdHandlerOnNewThread
+//you can modify the output string while running but currently only works with initciHandlerOnNewThread
 
 //args = std::string&
 CIH::initciHandlerOnNewThread(output);
