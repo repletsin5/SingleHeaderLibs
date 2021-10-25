@@ -11,18 +11,18 @@ void testCommand(vector<string> args) {
 
 
 int main(){
-//			   std::string    std::vector<std::string>		std::string		 void*()
+//			 std::string       std::vector<std::string>		              std::string		    void*()
 CIH::addCommand("test",       {"testAliases","anotherOne"}      ,   "desciption for help"},   testCommand)
 
 string output = ">>";
 //you can modify the output string while running but currently only works with initCmdHandlerOnNewThread
 
-//                         		std::string&
+//                         	std::string&
 CIH::initCmdHandlerOnNewThread(output);
 
 //or 
 
-//		             std::string&
+//		         std::string&
 CIH::initCmdHandler(output)
 }
 ```
