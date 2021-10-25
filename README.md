@@ -18,12 +18,12 @@ string output = ">>";
 //you can modify the output string while running but currently only works with initCmdHandlerOnNewThread
 
 //                         	std::string&
-CIH::initcihandlerOnNewThread(output);
+CIH::initciHandlerOnNewThread(output);
 
 //or 
 
 //		         std::string&
-CIH::initCmdHandler(output)
+CIH::initciHandler(output)
 }
 ```
 
