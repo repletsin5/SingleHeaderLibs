@@ -1,8 +1,5 @@
 //BSD 3-Clause License
 //Copyright(c) 2021, the SingleHeaderLibs developers
-
-
-
 #pragma once
 #include <chrono>
 #include <iostream>
@@ -23,11 +20,6 @@ struct commandStruct
 		void (*callback)(vector<string>);
 };
 
-class NotImplementedException : public std::logic_error
-{
-public:
-	virtual char const* what() const { return "Not yet implemented."; }
-};
 
  class CommandHandler
 {
@@ -227,7 +219,6 @@ void CommandHandler::addCommand(string cmd,vector<string> aliases, string descri
 						cmdH.commands[i].aliases = aliases;
 						cmdH.commands[i].callback = callback;
 					}
-
 				}
 				break;
 			}
@@ -249,11 +240,8 @@ void CommandHandler::addCommand(string cmd,vector<string> aliases, string descri
 				command.callback = callback;
 				cmdH.commands.push_back(command);
 				return;
-
 			}
-
 		}
-
 	}
 	else {
 		commandStruct command;
@@ -268,8 +256,6 @@ void CommandHandler::addCommand(string cmd,vector<string> aliases, string descri
 }
 
 void CommandHandler::helpCommand(vector<string> args) {
-
-
 	for (auto c : cmdH.commands) {
 		string temp = "";
 
