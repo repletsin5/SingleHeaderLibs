@@ -12,7 +12,7 @@ void testCommand(vector<string> args) {
 
 int main(){
 //args = std::string,std::vector<std::string>,std::string,void*()
-CIH::addCommand("test",{"testAliases","anotherOne"},"desciption for help"},testCommand)
+CIH::addCommand("test",{"testAliases","anotherOne"},"test description"},testCommand)
 
 string output = ">>";
 //you can modify the output string while running but currently only works with initciHandlerOnNewThread

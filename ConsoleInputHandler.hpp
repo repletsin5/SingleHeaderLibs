@@ -60,13 +60,14 @@ int CIH::initciHandlerOnNewThread(string& output) {
 }
 void* CIH::initciHandler(void* output) {
 
-	CIH::addCommand("help", { "" }, "", helpCommand);
+	CIH::addCommand("help", {}, "", helpCommand);
 	string outputString = *(static_cast<string*>(output));
 
 	cout << outputString;
 	while (true)
 	{
 		std::this_thread::sleep_for(80ms);
+
 		cih.currentCommand = "";
 
 		getline(cin, cih.inputText);
@@ -205,11 +206,6 @@ void CIH::addCommand(string cmd,vector<string> aliases, string description, void
 				assert(!(c.commandName == "help"));
 			}
 			else if (c.commandName == cmd) {
-				commandStruct command;
-				command.commandName = cmd;
-				command.aliases = aliases;
-				command.description = description;
-				command.callback = callback;
 				c.aliases = aliases;
 				c.callback = callback;
 				c.description = description;
@@ -252,20 +248,41 @@ void CIH::addCommand(string cmd,vector<string> aliases, string description, void
 }
 
 void CIH::helpCommand(vector<string> args) {
-	for (auto c : cih.commands) {
-		string temp = "";
-
-		if (!(c.commandName == "help")) {
-			temp = "\n" + c.commandName + "  " + c.description;
-			if (c.aliases.size() > 0) {
-				temp += "\n\naliases:\n";
-				for (auto b : c.aliases) {
-					temp += "\t" + b + "\n";
+	if(!args.empty() && !(args[0] ==  "")){
+		for (auto c : args) {
+			bool foundCmd = false;
+			for (auto b : cih.commands) {
+				if (c == b.commandName && !(c == "help")) {
+					foundCmd = true;
+					if(!(b.description.length() == 0 ))
+						cout << b.commandName << "\n  " << b.description << endl;
+					if (!(b.aliases.size() == 0)) {
+						cout << "aliases" << endl;
+						for (auto d : b.aliases) {
+							cout << "  " << d << endl;
+						}
+					}
 				}
 			}
-			cout << temp;
+			if(!foundCmd)
+				cout << "Cant find '" << c << "' command" << endl;
 		}
-
+		return;
+	}
+	else {	
+		for (auto c : cih.commands) {
+			if (!(c.commandName == "help")) {
+				if (!(c.description.length() == 0))
+					cout << c.commandName << "\n  " << c.description << endl;
+				if (!(c.aliases.size() == 0)) {
+					cout << "aliases" << endl;
+					for (auto b : c.aliases) {
+						cout << "  " << b << endl;
+					}
+				}
+				cout << endl;
+			}
+		}
 	}
 	return;
 }
