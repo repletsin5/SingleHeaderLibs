@@ -21,15 +21,15 @@ struct commandStruct
 };
 
 
- class CommandHandler
+ class CIH
 {
 
 public:
-	 CommandHandler();
-	 ~CommandHandler();
-	 inline static void initCmdHandler(string & output);
-	 inline static void* initCmdHandler(void* output);
-	 inline static int initCmdHandlerOnNewThread(string & output );
+	 CIH();
+	 ~CIH();
+	 inline static void initcihandler(string & output);
+	 inline static void* initcihandler(void* output);
+	 inline static int initcihandlerOnNewThread(string & output );
 	 std::vector<commandStruct> commands;
 	 static void addCommand(string cmd, vector<string> aliases, string description, void (*callback)(vector<string>));
 private:
@@ -38,62 +38,62 @@ private:
 	 static void handleCommands(string command,vector<string>args);
 	 static void helpCommand(vector<string> args);
 };
-static CommandHandler cmdH;
-CommandHandler::CommandHandler()
+static CIH cih;
+CIH::CIH()
 {
 }
 
-CommandHandler::~CommandHandler()
+CIH::~CIH()
 {
 }
 
-int CommandHandler::initCmdHandlerOnNewThread(string& output) {
+int CIH::initcihandlerOnNewThread(string& output) {
 
 	pthread_t thread;
 	int ret;
-	ret = pthread_create(&thread, NULL, initCmdHandler, (void*)&output);
+	ret = pthread_create(&thread, NULL, initcihandler, (void*)&output);
 	if (ret != 0) {
 		printf("pthread_create() failed\n");
 		exit(0);
 	}
 	return ret;
 }
-void* CommandHandler::initCmdHandler(void* output) {
+void* CIH::initcihandler(void* output) {
 
-	CommandHandler::addCommand("help", { "" }, "", helpCommand);
+	CIH::addCommand("help", { "" }, "", helpCommand);
 	string outputString = *(static_cast<string*>(output));
 
 	cout << outputString;
 	while (true)
 	{
 		std::this_thread::sleep_for(80ms);
-		cmdH.currentCommand = "";
+		cih.currentCommand = "";
 
-		getline(cin, cmdH.inputText);
-		for (auto c : cmdH.inputText) {
+		getline(cin, cih.inputText);
+		for (auto c : cih.inputText) {
 			if (c != ' ')
-				cmdH.currentCommand += c;
+				cih.currentCommand += c;
 			else
-				if (cmdH.currentCommand.size() > 0)
+				if (cih.currentCommand.size() > 0)
 					break;
 		}
 
 		string temp;
 		int toRemove = 0;
 
-		for (auto c : cmdH.currentCommand) {
+		for (auto c : cih.currentCommand) {
 			if (c == ' ')
 				toRemove++;
 			else
 				break;
 		}
 		if (toRemove > 0) {
-			cmdH.currentCommand.erase(cmdH.inputText.begin(), cmdH.inputText.begin() + (toRemove - 1));
+			cih.currentCommand.erase(cih.inputText.begin(), cih.inputText.begin() + (toRemove - 1));
 		}
-		temp = cmdH.currentCommand + " ";
-		cmdH.inputText.erase(cmdH.inputText.begin(), cmdH.inputText.begin() + (temp.size() - 1));
+		temp = cih.currentCommand + " ";
+		cih.inputText.erase(cih.inputText.begin(), cih.inputText.begin() + (temp.size() - 1));
 		temp = "";
-		auto args = cmdH.inputText;
+		auto args = cih.inputText;
 		vector<string>argsArray;
 
 		temp = "";
@@ -115,44 +115,44 @@ void* CommandHandler::initCmdHandler(void* output) {
 
 		}
 		argsArray.push_back(temp);
-		handleCommands(cmdH.currentCommand, argsArray);
+		handleCommands(cih.currentCommand, argsArray);
 
 		cout << outputString;
 	}
 }
 
-void CommandHandler::initCmdHandler(string & output) {
+void CIH::initcihandler(string & output) {
 
-	CommandHandler::addCommand("help", { "" }, "", helpCommand);
+	CIH::addCommand("help", { "" }, "", helpCommand);
 	cout << output;
 	while (true)
 	{
-		cmdH.currentCommand = "";
+		cih.currentCommand = "";
 
-		getline(cin, cmdH.inputText);
-		for (auto c : cmdH.inputText) {
+		getline(cin, cih.inputText);
+		for (auto c : cih.inputText) {
 			if (c != ' ')	
-				cmdH.currentCommand += c;
+				cih.currentCommand += c;
 			else
-				if(cmdH.currentCommand.size() > 0)
+				if(cih.currentCommand.size() > 0)
 					break;
 		}
 
 		string temp;
-		temp = cmdH.currentCommand + " ";
-		cmdH.inputText.erase(cmdH.inputText.begin(), cmdH.inputText.begin() + (temp.size()-1));
+		temp = cih.currentCommand + " ";
+		cih.inputText.erase(cih.inputText.begin(), cih.inputText.begin() + (temp.size()-1));
 		temp = "";
 		int toRemove = 0;
-		for (auto c : cmdH.currentCommand) {
+		for (auto c : cih.currentCommand) {
 			if (c == ' ')
 				toRemove++;
 			else
 				break;
 		}
 		if (toRemove > 0) {
-			cmdH.currentCommand.erase(cmdH.inputText.begin(), cmdH.inputText.begin() + (toRemove -1));
+			cih.currentCommand.erase(cih.inputText.begin(), cih.inputText.begin() + (toRemove -1));
 		}
-		auto args = cmdH.inputText;
+		auto args = cih.inputText;
 		vector<string>argsArray;
 		temp = "";
 		for (size_t i = 0; i < args.length(); i++) {
@@ -169,15 +169,15 @@ void CommandHandler::initCmdHandler(string & output) {
 				temp += c;
 			}
 		}
-		handleCommands(cmdH.currentCommand,argsArray);
+		handleCommands(cih.currentCommand,argsArray);
 
 		cout << output;
 	}
 
 }
 
-void CommandHandler::handleCommands(string command,vector<string>args) {
-	for (auto c : cmdH.commands) {
+void CIH::handleCommands(string command,vector<string>args) {
+	for (auto c : cih.commands) {
 		if (c.commandName == command) {
 			c.callback(args);
 			return;
@@ -196,9 +196,9 @@ void CommandHandler::handleCommands(string command,vector<string>args) {
 	return;
 }
 
-void CommandHandler::addCommand(string cmd,vector<string> aliases, string description, void (*callback)(vector<string>)) {
-	if (!(cmdH.commands.empty())) {
-		for (auto c : cmdH.commands) {
+void CIH::addCommand(string cmd,vector<string> aliases, string description, void (*callback)(vector<string>)) {
+	if (!(cih.commands.empty())) {
+		for (auto c : cih.commands) {
 			string temp = "";
 			if (c.commandName == "help") {
 				cout << "Cannnot overrite help command" << endl;
@@ -212,13 +212,14 @@ void CommandHandler::addCommand(string cmd,vector<string> aliases, string descri
 				command.aliases = aliases;
 				command.description = description;
 				command.callback = callback;
-				for (int i = 0; i < cmdH.commands.size(); i++) {
+				for (int i = 0; i < cih.commands.size(); i++) {
 
-					if (cmdH.commands[i].commandName == c.commandName) {
-						cmdH.commands[i].description = description;
-						cmdH.commands[i].aliases = aliases;
-						cmdH.commands[i].callback = callback;
+					if (cih.commands[i].commandName == c.commandName) {
+						cih.commands[i].description = description;
+						cih.commands[i].aliases = aliases;
+						cih.commands[i].callback = callback;
 					}
+
 				}
 				break;
 			}
@@ -238,10 +239,13 @@ void CommandHandler::addCommand(string cmd,vector<string> aliases, string descri
 				command.aliases = aliases;
 				command.description = description;
 				command.callback = callback;
-				cmdH.commands.push_back(command);
+				cih.commands.push_back(command);
 				return;
+
 			}
+
 		}
+
 	}
 	else {
 		commandStruct command;
@@ -249,14 +253,16 @@ void CommandHandler::addCommand(string cmd,vector<string> aliases, string descri
 		command.aliases = aliases;
 		command.description = description;
 		command.callback = callback;
-		cmdH.commands.push_back(command);
+		cih.commands.push_back(command);
 		return;
 	}
 	
 }
 
-void CommandHandler::helpCommand(vector<string> args) {
-	for (auto c : cmdH.commands) {
+void CIH::helpCommand(vector<string> args) {
+
+
+	for (auto c : cih.commands) {
 		string temp = "";
 
 		if (!(c.commandName == "help")) {
