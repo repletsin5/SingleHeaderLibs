@@ -27,9 +27,9 @@ struct commandStruct
 public:
 	 CIH();
 	 ~CIH();
-	 inline static void initciHandler(string & output);
-	 inline static void* initciHandler(void* output);
-	 inline static int initciHandlerOnNewThread(string & output );
+	 static void initciHandler(string & output);
+	 static void* initciHandler(void* output);
+	 static int initciHandlerOnNewThread(string & output );
 	 std::vector<commandStruct> commands;
 	 static void addCommand(string cmd, vector<string> aliases, string description, void (*callback)(vector<string>));
 private:
